@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Detail Tim</title>
+    <meta name="description" content="Pwa-angga-winata" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/materialize.min.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#5ce1e6" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navigasi -->
+    <nav class="blue lighten-2" role="navigation">
+      <div class="nav-wrapper container">
+        <a href="/" class="brand-logo" id="logo-container">Team Detail</a>
+        <a href="/" class="sidenav-trigger" data-target="nav-mobile">
+          <i class="material-icons">arrow_back</i>
+        </a>
+      </a>
+        
+      </div>
+    </nav>
+    <!-- Akhir Navigasi -->
+
+    <div class="container" >
+      <div class="row">
+        <div class="col s12 m6 offset-m3" id="body-content">
+        </div>
+    </div>
+    </div>
+
+    <div class="fixed-action-btn">
+      <a class="btn btn-floating btn-large teal" id="save">
+      <i class="large material-icons">save</i>
+      </a>
+  </div>
+    
+    <script src="js/materialize.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/idb.js"></script>
+    <script src="js/db.js"></script>
+    
+    <script>
+      
+      // REGISTER SERVICE WORKER
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker
+            .register("/service-worker.js")
+            .then(() =>{
+              console.log("Pendaftaran ServiceWorker berhasil");
+            })
+            .catch(() =>{
+              console.log("Pendaftaran ServiceWorker gagal");
+            });
+        });
+      } else {
+        console.log("ServiceWorker belum didukung browser ini.");
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var isFromSaved = urlParams.get("saved");
+      var btnSave = document.getElementById("save");
+      if (isFromSaved) {
+        // Hide fab jika dimuat dari indexed db
+        btnSave.style.display = 'none';
+        
+        // ambil artikel lalu tampilkan
+        getSavedTeamById();
+      } else {
+        var item = getTeamById();
+      }
+      btnSave.onclick = function() {
+        console.log("Tombol FAB di klik.");
+        item.then((article) =>{
+          M.toast({html: 'Team Detail ini telah disimpan'})
+          console.log("klikk",article)
+          saveForLater(article);
+        });
+        };        
+      });
+
+      
+    </script>
+  </body>
+</html>
